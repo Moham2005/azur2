@@ -1,14 +1,47 @@
-from dash import Dash, html, dcc
+import dash
+from dash import html, dcc
+import requests
 
-app = Dash(
-    __name__,
-    requests_pathname_prefix="/dashboard/"
-)
+app = dash.Dash(__name__, requests_pathname_prefix='/dashboard/')
 
+try:
+    response = requests.get("http://127.0.0.1:8000/info")
+    if response.status_code == 200:
+        Info = response.json()
+    else:
+        Info = {
+            "date": "N/A",
+            "time": "N/A",
+            "weather": {
+                "city": "Erreur API",
+                "temperature": "N/A",
+                "description": f"Erreur {response.status_code}"
+            }
+        }
+except Exception as e:
+    Info = {
+        "date": "N/A",
+        "time": "N/A",
+        "weather": {
+            "city": "Erreur",
+            "temperature": "N/A",
+            "description": f"Exception: {str(e)}"
+        }
+    }
+
+# Layout de l'app Dash
 app.layout = html.Div([
-    html.H1("Bienvenue sur le dashboard Dash"),
-    html.P("Ceci est une application Dash intégrée à FastAPI."),
-    
+    html.Div([
+        html.A('Home', href='/'),
+    ], style={'marginTop': '20px'}),
+
+    html.H2("Informations météo"),
+    html.P(f"Ville : {Info['weather']['city']}"),
+    html.P(f"Température : {Info['weather']['temperature']} °C"),
+    html.P(f"Description : {Info['weather']['description']}"),
+    html.P(f"Date : {Info['date']}"),
+    html.P(f"Heure : {Info['time']}"),
+
     dcc.Graph(
         id='exmpl_1',
         figure={
