@@ -28,7 +28,7 @@ templates = Jinja2Templates(directory=templates_dir)
 user = {"admin": "123"}
 
 # URL API météo
-EXTERNAL_API_URL = 'http://127.0.0.1:8000/info'
+EXTERNAL_API_URL = 'https://weatherproject-gtftcnh8ghadgqhp.canadacentral-01.azurewebsites.net/info'
 
 # Fonction pour récupérer les infos météo depuis une API locale
 def get_external_info():
